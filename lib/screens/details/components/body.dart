@@ -11,7 +11,7 @@ import 'top_rounded_container.dart';
 import 'product_images.dart';
 
 class Body extends StatelessWidget {
-  final Product product;
+  Map<String, dynamic> product;
 
   Body({Key? key, required this.product}) : super(key: key);
 

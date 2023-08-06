@@ -12,7 +12,7 @@ class ColorDots extends StatelessWidget {
     required this.product,
   }) : super(key: key);
 
-  final Product product;
+  Map<String, dynamic> product;
 
   final height = Get.height;
   final width = Get.width;
@@ -30,10 +30,10 @@ class ColorDots extends StatelessWidget {
       child: Row(
         children: [
           ...List.generate(
-            product.colors.length,
+            3,
             (index) => ColorDot(
-              color: product.colors[index],
-              isSelected: index == selectedColor,
+              color: Colors.amber,
+              // isSelected: index == selectedColor,
             ),
           ),
           Spacer(),

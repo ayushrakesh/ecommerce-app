@@ -11,26 +11,30 @@ class ProductCard extends StatelessWidget {
   ProductCard({
     Key? key,
     this.width = 140,
-    this.aspectRetio = 1.02,
     required this.product,
+    this.isAll = false,
+    this.aspectRetio = 1.02,
   }) : super(key: key);
 
   final double width, aspectRetio;
-  final Product product;
+
+  Map<String, dynamic> product;
 
   final height = Get.height;
   final widths = Get.width;
 
+  bool isAll;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: width * 0.12),
+      margin: isAll ? EdgeInsets.all(0) : EdgeInsets.only(right: width * 0.12),
       width: widths * 0.36,
       child: GestureDetector(
         onTap: () => Navigator.pushNamed(
           context,
           DetailsScreen.routeName,
-          arguments: ProductDetailsArguments(product: product),
+          arguments: product,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,14 +51,14 @@ class ProductCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Hero(
-                  tag: product.id.toString(),
-                  child: Image.asset(product.images[0]),
+                  tag: product['id'],
+                  child: Image.network('${product['images'][0]}'),
                 ),
               ),
             ),
             SizedBox(height: 10),
             Text(
-              product.title,
+              product['name'],
               style: TextStyle(color: Colors.black),
               maxLines: 2,
             ),
@@ -62,7 +66,7 @@ class ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "\$${product.price}",
+                  "\$${product['price']}",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -75,7 +79,7 @@ class ProductCard extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: product.isFavourite
+                      color: product['isFavourite']
                           ? kPrimaryColor.withOpacity(0.15)
                           : kSecondaryColor.withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -83,7 +87,7 @@ class ProductCard extends StatelessWidget {
                     child: SvgPicture.asset(
                       "assets/icons/Heart Icon_2.svg",
                       height: width * 0.08,
-                      color: product.isFavourite
+                      color: product['isFavourite']
                           ? Color(0xFFFF4848)
                           : Color(0xFFDBDEE4),
                     ),
