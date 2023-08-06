@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "84607501984",
+    "project_id": "ticket-booking-38655",
+    "storage_bucket": "ticket-booking-38655.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84607501984:android:b6c670059a7d35a3766bc5",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "84607501984-7a4ip068rjhjjo34j5n7fg6ubu5r6o9r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecommerce_app",
+            "certificate_hash": "0dae88e67394b95f734035646eef2c328b92b9ef"
+          }
+        },
+        {
+          "client_id": "84607501984-1kjiemj0aojkonhtrg4dqu7olc4l27a8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoJtzH0nXw-KCMzAAqKAC1ezqqUXNMhEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "84607501984-1kjiemj0aojkonhtrg4dqu7olc4l27a8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "84607501984-h825f521foq48pnk8cigdq06spccnb1v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ecommerceApp.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
