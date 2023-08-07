@@ -7,7 +7,7 @@ import '../models/Product.dart';
 import '../screens/details/details_screen.dart';
 import '../size_config.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   ProductCard({
     Key? key,
     this.width = 140,
@@ -20,21 +20,29 @@ class ProductCard extends StatelessWidget {
 
   Map<String, dynamic> product;
 
-  final height = Get.height;
-  final widths = Get.width;
-
   bool isAll;
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  final height = Get.height;
+
+  final widths = Get.width;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: isAll ? EdgeInsets.all(0) : EdgeInsets.only(right: width * 0.12),
+      margin: widget.isAll
+          ? EdgeInsets.all(0)
+          : EdgeInsets.only(right: widget.width * 0.12),
       width: widths * 0.36,
       child: GestureDetector(
         onTap: () => Navigator.pushNamed(
           context,
           DetailsScreen.routeName,
-          arguments: product,
+          arguments: widget.product,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +51,7 @@ class ProductCard extends StatelessWidget {
               aspectRatio: 1.02,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.02,
+                  horizontal: widget.width * 0.02,
                   vertical: height * 0.04,
                 ),
                 decoration: BoxDecoration(
@@ -51,14 +59,14 @@ class ProductCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Hero(
-                  tag: product['id'],
-                  child: Image.network('${product['images'][0]}'),
+                  tag: widget.product['id'],
+                  child: Image.network('${widget.product['images'][0]}'),
                 ),
               ),
             ),
             SizedBox(height: 10),
             Text(
-              product['name'],
+              widget.product['name'],
               style: TextStyle(color: Colors.black),
               maxLines: 2,
             ),
@@ -66,8 +74,8 @@ class ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "\$${product['price']}",
-                  style: TextStyle(
+                  "\$${widget.product['price']}",
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: kPrimaryColor,
@@ -75,19 +83,24 @@ class ProductCard extends StatelessWidget {
                 ),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      widget.product['isFavourite'] =
+                          !widget.product['isFavourite'];
+                    });
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: product['isFavourite']
+                      color: widget.product['isFavourite']
                           ? kPrimaryColor.withOpacity(0.15)
                           : kSecondaryColor.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: SvgPicture.asset(
                       "assets/icons/Heart Icon_2.svg",
-                      height: width * 0.08,
-                      color: product['isFavourite']
+                      height: widget.width * 0.08,
+                      color: widget.product['isFavourite']
                           ? Color(0xFFFF4848)
                           : Color(0xFFDBDEE4),
                     ),

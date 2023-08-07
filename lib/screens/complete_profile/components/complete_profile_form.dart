@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/helper/keyboard.dart';
 import 'package:ecommerce_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:ecommerce_app/screens/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -14,6 +18,10 @@ import '../../../size_config.dart';
 import '../../otp/otp_screen.dart';
 
 class CompleteProfileForm extends StatefulWidget {
+  final File imgFile;
+
+  CompleteProfileForm(this.imgFile);
+
   @override
   _CompleteProfileFormState createState() => _CompleteProfileFormState();
 }
@@ -58,6 +66,14 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         'last-name': lastName!.trim(),
         'phone': phoneNumber!.trim(),
       });
+
+      final imageRF = FirebaseStorage.instance
+          .ref()
+          .child('user-profile-images')
+          .child('$currentUserid.jpg');
+
+      final imageFile = imageRF.putFile(widget.imgFile);
+
       setState(() {
         isloading = false;
       });

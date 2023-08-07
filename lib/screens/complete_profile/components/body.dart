@@ -1,14 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
+import '../../profile/components/profile_pic.dart';
 import 'complete_profile_form.dart';
 import 'package:get/get.dart';
 
 class Body extends StatelessWidget {
   final height = Get.height;
   final width = Get.width;
+
+  File? pickedimg;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +26,9 @@ class Body extends StatelessWidget {
             child: Column(
               children: [
                 Gap(height * 0.03),
-                // Text("Complete Profile", style: headingStyle),
-                Text(
-                  "Complete your details or continue  \nwith social media",
-                  textAlign: TextAlign.center,
-                ),
-                Gap(height * 0.02),
-                CompleteProfileForm(),
+                ProfilePic(pickedimg),
+                Gap(height * 0.026),
+                CompleteProfileForm(pickedimg!),
                 Gap(height * 0.03),
                 Text(
                   "By continuing your confirm that you agree \nwith our Term and Condition",
