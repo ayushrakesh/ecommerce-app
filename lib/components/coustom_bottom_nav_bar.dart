@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/screens/cart/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../constants.dart';
@@ -53,8 +54,10 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () {},
               ),
               IconButton(
-                icon: SvgPicture.asset("assets/icons/Chat bubble Icon.svg"),
-                onPressed: () {},
+                icon: SvgPicture.asset("assets/icons/Cart Icon.svg"),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CartScreen.routeName);
+                },
               ),
               IconButton(
                 icon: SvgPicture.asset(

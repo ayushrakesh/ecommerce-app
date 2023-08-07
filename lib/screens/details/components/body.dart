@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/constants.dart';
+import 'package:ecommerce_app/screens/cart/cart_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -10,29 +14,71 @@ import 'product_description.dart';
 import 'top_rounded_container.dart';
 import 'product_images.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   Map<String, dynamic> product;
 
-  Body({Key? key, required this.product}) : super(key: key);
+  String id;
 
+  Body({Key? key, required this.product, required this.id}) : super(key: key);
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   final height = Get.height;
   final width = Get.width;
+
+  bool isLoading = false;
+  bool isInBasket = false;
+
+  void addToCart() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    if (!widget.product['is-in-basket']) {
+      await FirebaseFirestore.instance.collection('cart').add({
+        'name': widget.product['name'],
+        'price': widget.product['price'],
+        'quantity': 1,
+      });
+
+      final productToUpdate = FirebaseFirestore.instance
+          .collection('products')
+          .where('id', isEqualTo: widget.product['id']);
+
+      var d = await productToUpdate.get();
+
+      for (var doc in d.docs) {
+        await doc.reference.update({'is-in-basket': true});
+      }
+
+      setState(() {
+        isInBasket = true;
+      });
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        ProductImages(product: product),
+        ProductImages(product: widget.product),
         TopRoundedContainer(
           color: Colors.white,
           child: Column(
             children: [
               ProductDescription(
-                product: product,
+                product: widget.product,
                 pressOnSeeMore: () {},
               ),
               TopRoundedContainer(
-                color: Color(0xFFF6F7F9),
+                color: const Color(0xFFF6F7F9),
                 child: Column(
                   children: [
                     Padding(
@@ -40,7 +86,7 @@ class Body extends StatelessWidget {
                         // left: width * 0.04,
                         top: height * 0.01,
                       ),
-                      child: ColorDots(product: product),
+                      child: ColorDots(product: widget.product),
                     ),
                     Gap(height * 0.02),
                     Padding(
@@ -50,10 +96,41 @@ class Body extends StatelessWidget {
                           bottom: height * 0.02
                           // : height * 0.04,
                           ),
-                      child: DefaultButton(
-                        text: "Add To Cart",
-                        press: () {},
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.deepOrange,
+                            )
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 6,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    8,
+                                  ),
+                                ),
+                                backgroundColor: widget.product['is-in-basket']
+                                    ? Color.fromARGB(255, 6, 15, 140)
+                                    : const Color(0xFFFF7643),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.35,
+                                  vertical: height * 0.018,
+                                ),
+                              ),
+                              onPressed: isInBasket ? () {} : addToCart,
+                              child: widget.product['is-in-basket']
+                                  ? const Text(
+                                      'Is in Basket',
+                                      style: TextStyle(
+                                        letterSpacing: 0.4,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Add to Cart',
+                                      style: TextStyle(
+                                        letterSpacing: 0.6,
+                                      ),
+                                    ),
+                            ),
                     ),
                   ],
                 ),

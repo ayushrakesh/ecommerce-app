@@ -28,7 +28,7 @@ class Body extends StatelessWidget {
                 Gap(height * 0.03),
                 ProfilePic(pickedimg),
                 Gap(height * 0.026),
-                CompleteProfileForm(pickedimg!),
+                CompleteProfileForm(pickedimg),
                 Gap(height * 0.03),
                 Text(
                   "By continuing your confirm that you agree \nwith our Term and Condition",

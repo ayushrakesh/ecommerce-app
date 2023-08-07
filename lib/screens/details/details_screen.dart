@@ -13,16 +13,15 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final agrs =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final agrs = (ModalRoute.of(context)!.settings.arguments) as List;
 
     return Scaffold(
       backgroundColor: Color(0xFFF5F6F9),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: CustomAppBar(rating: agrs['rating']),
+        child: CustomAppBar(rating: agrs[0]['rating']),
       ),
-      body: Body(product: agrs),
+      body: Body(product: agrs[0], id: agrs[1]),
     );
   }
 }

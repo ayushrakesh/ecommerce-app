@@ -41,6 +41,9 @@ class ProductsScreen extends StatelessWidget {
                     return ProductCard(
                       product: snapshot.data!.docs[index].data(),
                       isAll: true,
+                      id: snapshot.data!.docs[index].data()['id'],
+                      isFavourite:
+                          snapshot.data!.docs[index].data()['isFavourite'],
                     );
                   }
                   return const CircularProgressIndicator();

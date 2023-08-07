@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,8 @@ class ProductCard extends StatefulWidget {
     Key? key,
     this.width = 140,
     required this.product,
+    required this.isFavourite,
+    required this.id,
     this.isAll = false,
     this.aspectRetio = 1.02,
   }) : super(key: key);
@@ -19,7 +23,8 @@ class ProductCard extends StatefulWidget {
   final double width, aspectRetio;
 
   Map<String, dynamic> product;
-
+  bool isFavourite;
+  String id;
   bool isAll;
 
   @override
@@ -28,8 +33,21 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   final height = Get.height;
-
   final widths = Get.width;
+
+  void updateFavouriteStatus() async {
+    final f = FirebaseFirestore.instance
+        .collection('products')
+        .where('id', isEqualTo: widget.id);
+
+    final docs = await f.get();
+
+    for (var doc in docs.docs) {
+      await doc.reference.update(
+        {'isFavourite': widget.isFavourite ? false : true},
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +60,10 @@ class _ProductCardState extends State<ProductCard> {
         onTap: () => Navigator.pushNamed(
           context,
           DetailsScreen.routeName,
-          arguments: widget.product,
+          arguments: [
+            widget.product,
+            widget.product['id'],
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,12 +104,7 @@ class _ProductCardState extends State<ProductCard> {
                 ),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: () {
-                    setState(() {
-                      widget.product['isFavourite'] =
-                          !widget.product['isFavourite'];
-                    });
-                  },
+                  onTap: updateFavouriteStatus,
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(

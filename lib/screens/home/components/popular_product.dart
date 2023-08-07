@@ -36,6 +36,9 @@ class PopularProducts extends StatelessWidget {
                     print(snapshot.data!.docs);
                     return ProductCard(
                       product: snapshot.data!.docs[index].data(),
+                      id: snapshot.data!.docs[index].data()['id'],
+                      isFavourite:
+                          snapshot.data!.docs[index].data()['isFavourite'],
                     );
                   },
                   itemCount: 3,

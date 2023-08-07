@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
@@ -18,7 +19,7 @@ import '../../../size_config.dart';
 import '../../otp/otp_screen.dart';
 
 class CompleteProfileForm extends StatefulWidget {
-  final File imgFile;
+  final File? imgFile;
 
   CompleteProfileForm(this.imgFile);
 
@@ -67,12 +68,16 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         'phone': phoneNumber!.trim(),
       });
 
-      final imageRF = FirebaseStorage.instance
+      final imagesRef = FirebaseStorage.instance
           .ref()
-          .child('user-profile-images')
+          .child('user-images')
           .child('$currentUserid.jpg');
 
-      final imageFile = imageRF.putFile(widget.imgFile);
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String filePath = '${appDocDir.absolute}/$imagesRef';
+      File file = File(filePath);
+
+      final testimg = await imagesRef.putFile(file);
 
       setState(() {
         isloading = false;
