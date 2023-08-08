@@ -13,6 +13,7 @@ class ProductCard extends StatefulWidget {
   ProductCard({
     Key? key,
     this.width = 140,
+    this.isProductsScreen = true,
     required this.product,
     required this.isFavourite,
     required this.id,
@@ -21,6 +22,8 @@ class ProductCard extends StatefulWidget {
   }) : super(key: key);
 
   final double width, aspectRetio;
+
+  bool isProductsScreen;
 
   Map<String, dynamic> product;
   bool isFavourite;
@@ -104,23 +107,36 @@ class _ProductCardState extends State<ProductCard> {
                 ),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: updateFavouriteStatus,
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: widget.product['isFavourite']
-                          ? kPrimaryColor.withOpacity(0.15)
-                          : kSecondaryColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: SvgPicture.asset(
-                      "assets/icons/Heart Icon_2.svg",
-                      height: widget.width * 0.08,
-                      color: widget.product['isFavourite']
-                          ? Color(0xFFFF4848)
-                          : Color(0xFFDBDEE4),
-                    ),
-                  ),
+                  onTap:
+                      widget.isProductsScreen ? updateFavouriteStatus : () {},
+                  child: widget.isProductsScreen
+                      ? Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: widget.product['isFavourite']
+                                ? kPrimaryColor.withOpacity(0.15)
+                                : kSecondaryColor.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/icons/Heart Icon_2.svg",
+                            height: widget.width * 0.08,
+                            color: widget.product['isFavourite']
+                                ? Color(0xFFFF4848)
+                                : Color(0xFFDBDEE4),
+                          ),
+                        )
+                      : Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor.withOpacity(0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(
+                              "assets/icons/Heart Icon_2.svg",
+                              height: widget.width * 0.08,
+                              color: Color(0xFFFF4848)),
+                        ),
                 ),
               ],
             )

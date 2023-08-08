@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.0.15
   image_picker: ^1.0.2
   firebase_storage: ^11.2.5
+  nanoid: ^1.0.0
 
 dev_dependencies:
   flutter_test:

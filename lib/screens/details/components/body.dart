@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-
+import 'package:nanoid/nanoid.dart';
 import '../../../components/default_button.dart';
 import '../../../models/Product.dart';
 import '../../../size_config.dart';
@@ -39,9 +39,11 @@ class _BodyState extends State<Body> {
 
     if (!widget.product['is-in-basket']) {
       await FirebaseFirestore.instance.collection('cart').add({
+        'id': widget.product['id'],
         'name': widget.product['name'],
         'price': widget.product['price'],
         'quantity': 1,
+        'image': widget.product['images'][0],
       });
 
       final productToUpdate = FirebaseFirestore.instance
@@ -127,8 +129,8 @@ class _BodyState extends State<Body> {
                                   : const Text(
                                       'Add to Cart',
                                       style: TextStyle(
-                                        letterSpacing: 0.6,
-                                      ),
+                                          // letterSpacing: 0.4,
+                                          ),
                                     ),
                             ),
                     ),

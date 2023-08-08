@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/Cart.dart';
@@ -32,10 +33,30 @@ class CartScreen extends StatelessWidget {
             "Your Cart",
             style: TextStyle(color: Colors.black),
           ),
-          Text(
-            "${demoCarts.length} items",
-            style: Theme.of(context).textTheme.caption,
-          ),
+          StreamBuilder(
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                num items = 0;
+                var docs = snapshot.data!.docs.forEach(
+                  (element) {
+                    items = items + (element.data()['quantity']);
+                  },
+                );
+                return Text(
+                  "${items} items",
+                  style: Theme.of(context).textTheme.caption,
+                );
+              }
+              return SizedBox(
+                height: 10,
+                width: 10,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1,
+                ),
+              );
+            },
+            stream: FirebaseFirestore.instance.collection('cart').snapshots(),
+          )
         ],
       ),
     );

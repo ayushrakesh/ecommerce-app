@@ -36,17 +36,6 @@ class ColorDots extends StatelessWidget {
               // isSelected: index == selectedColor,
             ),
           ),
-          Spacer(),
-          RoundedIconBtn(
-            icon: Icons.remove,
-            press: () {},
-          ),
-          SizedBox(width: width * 0.03),
-          RoundedIconBtn(
-            icon: Icons.add,
-            showShadow: true,
-            press: () {},
-          ),
         ],
       ),
     );
