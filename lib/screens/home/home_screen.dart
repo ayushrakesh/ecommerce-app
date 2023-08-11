@@ -28,7 +28,6 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                // SizedBox(height: height * 0.05),
                 HomeHeader(),
                 SizedBox(height: height * 0.04),
                 DiscountBanner(),
@@ -38,7 +37,6 @@ class HomeScreen extends StatelessWidget {
                 SpecialOffers(),
                 Gap(height * 0.04),
                 PopularProducts(),
-                // SizedBox(height: height * 0.08),
               ],
             ),
           ),
