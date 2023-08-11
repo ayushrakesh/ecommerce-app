@@ -46,13 +46,9 @@ class _BodyState extends State<Body> {
               itemBuilder: (context, index) => Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Dismissible(
-                  // key: Key(snapshot.data!.docs[index]['id']),
                   key: UniqueKey(),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) async {
-                    // await snapshot.data!.docs[index].reference.update({
-                    //   'is-in-basket': false,
-                    // });
                     await snapshot.data!.docs[index].reference.delete();
                     updateCartStatus(snapshot.data!.docs[index]['id']);
                   },

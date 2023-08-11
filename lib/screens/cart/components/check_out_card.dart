@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -19,22 +20,9 @@ class CheckoutCard extends StatefulWidget {
 
 class _CheckoutCardState extends State<CheckoutCard> {
   final height = Get.height;
-
   final width = Get.width;
+
   num total = 0;
-
-  Future<num> cartTotal() async {
-    var data = await FirebaseFirestore.instance.collection('cart').get();
-
-    data.docs.forEach((element) {
-      setState(() {
-        total =
-            total + (element.data()['quantity']) * (element.data()['price']);
-      });
-    });
-
-    return total;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,58 +79,76 @@ class _CheckoutCardState extends State<CheckoutCard> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('Total'),
-                    Gap(width * 0.05),
+                    Gap(height * 0.03),
                     SizedBox(
-                      height: 30,
-                      width: width * 0.2,
+                      height: 50,
+                      width: width * 0.7,
                       child: StreamBuilder(
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            num total = 0;
+                            num totalAmount = 0;
                             var docs = snapshot.data!.docs;
                             docs.forEach((element) {
-                              total = total +
+                              totalAmount = totalAmount +
                                   (element.data()['quantity']) *
                                       (element.data()['price']);
                             });
 
-                            return Text(
-                              total.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
+                            total = totalAmount;
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: width * 0.2,
+                                  child: Text(
+                                    totalAmount.toStringAsFixed(2),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                // SizedBox(width: width*0.04),
+                                SizedBox(
+                                  width: width * 0.4,
+                                  height: height * 0.1,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: kPrimaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          20,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Buy Now",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                        PaymentScreen.routeName,
+                                        arguments: [total, snapshot],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             );
                           }
-                          return CircularProgressIndicator(
-                            strokeWidth: 2,
-                          );
+                          return CircularProgressIndicator();
                         },
                         stream: FirebaseFirestore.instance
                             .collection('cart')
                             .snapshots(),
                       ),
-                    )
+                    ),
                   ],
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.14,
-                      vertical: height * 0.02,
-                    ),
-                    backgroundColor: kPrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        16,
-                      ),
-                    ),
-                  ),
-                  child: Text("Check Out"),
-                  onPressed: () {},
                 ),
               ],
             ),

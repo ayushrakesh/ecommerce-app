@@ -38,7 +38,7 @@ class _BodyState extends State<Body> {
     });
 
     if (!widget.product['is-in-basket']) {
-      await FirebaseFirestore.instance.collection('cart').add({
+      final docRF = await FirebaseFirestore.instance.collection('cart').add({
         'id': widget.product['id'],
         'name': widget.product['name'],
         'price': widget.product['price'],

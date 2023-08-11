@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../models/Cart.dart';
 import 'components/body.dart';
 import 'components/check_out_card.dart';
 
 class CartScreen extends StatelessWidget {
   static String routeName = "/cart";
+
+  final Stream snapshots =
+      FirebaseFirestore.instance.collection('cart').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +32,7 @@ class CartScreen extends StatelessWidget {
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             "Your Cart",
             style: TextStyle(color: Colors.black),
           ),

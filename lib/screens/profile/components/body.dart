@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ecommerce_app/screens/complete_profile/complete_profile_screen.dart';
+import 'package:ecommerce_app/screens/orders_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'profile_menu.dart';
@@ -24,9 +25,11 @@ class Body extends StatelessWidget {
             },
           ),
           ProfileMenu(
-            text: "Notifications",
+            text: "My Orders",
             icon: "assets/icons/Bell.svg",
-            press: () {},
+            press: () {
+              Navigator.of(context).pushNamed(OrdersScreen.routename);
+            },
           ),
           ProfileMenu(
             text: "Settings",
