@@ -22,12 +22,17 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: height * 0.04,
-              horizontal: width * 0.04,
+            padding: EdgeInsets.only(
+              left: width * 0.04,
+              right: width * 0.04,
+              bottom: width * 0.04,
+              top: width * 0.02,
+              // vertical: height * 0.04,
+              // horizontal: width * 0.04,
             ),
             child: Column(
               children: [
+                Gap(height * 0.01),
                 HomeHeader(),
                 SizedBox(height: height * 0.04),
                 DiscountBanner(),
@@ -42,7 +47,8 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(selectedMenu: MenuState.home),
+      bottomNavigationBar:
+          const CustomBottomNavBar(selectedMenu: MenuState.home),
     );
   }
 }

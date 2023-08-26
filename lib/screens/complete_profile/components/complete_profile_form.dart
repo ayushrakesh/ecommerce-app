@@ -17,11 +17,10 @@ import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import '../../otp/otp_screen.dart';
+import '../../profile/components/profile_pic.dart';
 
 class CompleteProfileForm extends StatefulWidget {
-  final File? imgFile;
-
-  CompleteProfileForm(this.imgFile);
+  CompleteProfileForm();
 
   @override
   _CompleteProfileFormState createState() => _CompleteProfileFormState();
@@ -30,13 +29,13 @@ class CompleteProfileForm extends StatefulWidget {
 class _CompleteProfileFormState extends State<CompleteProfileForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final firstNameCtl = TextEditingController();
-  final lastnameCtl = TextEditingController();
-  final phoneCtl = TextEditingController();
-
   String? firstName;
   String? lastName;
   String? phoneNumber;
+
+  final firstNameCtl = TextEditingController();
+  final lastnameCtl = TextEditingController();
+  final phoneCtl = TextEditingController();
 
   final height = Get.height;
   final width = Get.width;
@@ -44,57 +43,85 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   bool isloading = false;
 
   final currentUserid = FirebaseAuth.instance.currentUser!.uid;
-  var userData;
 
-  void saveDetails() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      KeyboardUtil.hideKeyboard(context);
-      FocusScope.of(context).unfocus();
+  var userdata;
 
-      firstNameCtl.clear();
-      lastnameCtl.clear();
-      phoneCtl.clear();
+  File? imgFile;
 
-      setState(() {
-        isloading = true;
-      });
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUserid)
-          .update({
-        'first-name': firstName!.trim(),
-        'last-name': lastName!.trim(),
-        'phone': phoneNumber!.trim(),
-      });
+  @override
+  // void initState() {
+  //   getuserdata();
+  //   super.initState();
+  // }
 
-      final imagesRef = FirebaseStorage.instance
-          .ref()
-          .child('user-images')
-          .child('$currentUserid.jpg');
+  // void getuserdata() async {
+  //   final data = await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .get();
 
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      String filePath = '${appDocDir.absolute}/$imagesRef';
-      File file = File(filePath);
+  //   final userData = data.data();
 
-      final testimg = await imagesRef.putFile(file);
-
-      setState(() {
-        isloading = false;
-      });
-
-      if (isloading == false) {
-        Navigator.pushNamed(context, ProfileScreen.routeName);
-      }
-    }
-  }
+  //   setState(() {
+  //     userdata = userData;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    void saveDetails() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        KeyboardUtil.hideKeyboard(context);
+        FocusScope.of(context).unfocus();
+
+        firstNameCtl.clear();
+        lastnameCtl.clear();
+        phoneCtl.clear();
+
+        setState(() {
+          isloading = true;
+        });
+
+        final imageRef = FirebaseStorage.instance
+            .ref()
+            .child('user-images')
+            .child('$currentUserid.jpg');
+
+        final testimg = imageRef.putFile(imgFile!);
+
+        final userimagedownloadurl = await imageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUserid)
+            .update({
+          'first-name': firstName!.trim(),
+          'last-name': lastName!.trim(),
+          'phone': phoneNumber!.trim(),
+          'image': userimagedownloadurl,
+        });
+
+        // Directory appDocDir = await getApplicationDocumentsDirectory();
+        // String filePath = '${appDocDir.absolute}/$imagesRef';
+        // File file = File(filePath);
+
+        setState(() {
+          isloading = false;
+        });
+
+        if (isloading == false) {
+          Navigator.pushNamed(context, ProfileScreen.routeName);
+        }
+      }
+    }
+
     return Form(
       key: _formKey,
       child: Column(
         children: [
+          ProfilePic(imgFile),
+          Gap(height * 0.03),
           buildFirstNameFormField(),
           Gap(height * 0.03),
           buildLastNameFormField(),
@@ -106,7 +133,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                   text: "Save details",
                   press: saveDetails,
                 )
-              : CircularProgressIndicator(),
+              : const CircularProgressIndicator(),
         ],
       ),
     );
@@ -114,6 +141,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   TextFormField buildPhoneNumberFormField() {
     return TextFormField(
+      controller: phoneCtl,
       keyboardType: TextInputType.phone,
       onSaved: (newValue) => phoneNumber = newValue,
       onChanged: (value) {

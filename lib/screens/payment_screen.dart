@@ -101,11 +101,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+          ),
+        ),
         title: const Text(
           "Payment",
           style: TextStyle(
             color: Colors.black87,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w200,
             fontSize: 24,
           ),
         ),
@@ -115,6 +123,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           left: width * 0.05,
           right: width * 0.05,
           top: height * 0.04,
+          bottom: height * 0.01,
         ),
         child: Column(
           children: [

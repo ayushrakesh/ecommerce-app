@@ -19,9 +19,9 @@ class DetailsScreen extends StatelessWidget {
       backgroundColor: Color(0xFFF5F6F9),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: CustomAppBar(rating: agrs[0]['rating']),
+        child: CustomAppBar(productId: agrs[0]),
       ),
-      body: Body(product: agrs[0], id: agrs[1]),
+      body: Body(productId: agrs[0] as String),
     );
   }
 }

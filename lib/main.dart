@@ -25,15 +25,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'E-commerce',
       theme: theme(),
-      home: StreamBuilder(
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return HomeScreen();
-          }
-          return SignInScreen();
-        },
-        stream: FirebaseAuth.instance.authStateChanges(),
-      ),
+      // home: StreamBuilder(
+      //   builder: (context, snapshot) {
+      //     if (snapshot.data != null) {
+      //       return HomeScreen();
+      //     }
+      //     return SignInScreen();
+      //   },
+      //   stream: FirebaseAuth.instance.authStateChanges(),
+      // ),
+      home: HomeScreen(),
       routes: routes,
     );
   }

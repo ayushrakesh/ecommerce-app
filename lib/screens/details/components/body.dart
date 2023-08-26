@@ -15,11 +15,11 @@ import 'top_rounded_container.dart';
 import 'product_images.dart';
 
 class Body extends StatefulWidget {
-  Map<String, dynamic> product;
+  // Map<String, dynamic> product;
 
-  String id;
+  String productId;
 
-  Body({Key? key, required this.product, required this.id}) : super(key: key);
+  Body({Key? key, required this.productId}) : super(key: key);
 
   @override
   State<Body> createState() => _BodyState();
@@ -32,23 +32,23 @@ class _BodyState extends State<Body> {
   bool isLoading = false;
   bool isInBasket = false;
 
-  void addToCart() async {
+  void addToCart(Map<String, dynamic> product) async {
     setState(() {
       isLoading = true;
     });
 
-    if (!widget.product['is-in-basket']) {
+    if (!product['is-in-basket']) {
       final docRF = await FirebaseFirestore.instance.collection('cart').add({
-        'id': widget.product['id'],
-        'name': widget.product['name'],
-        'price': widget.product['price'],
+        'id': product['id'],
+        'name': product['name'],
+        'price': product['price'],
         'quantity': 1,
-        'image': widget.product['images'][0],
+        'image': product['images'][0],
       });
 
       final productToUpdate = FirebaseFirestore.instance
           .collection('products')
-          .where('id', isEqualTo: widget.product['id']);
+          .where('id', isEqualTo: product['id']);
 
       var d = await productToUpdate.get();
 
@@ -68,79 +68,100 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ProductImages(product: widget.product),
-        TopRoundedContainer(
-          color: Colors.white,
-          child: Column(
+    return StreamBuilder(
+      builder: (ctx, snapshot) {
+        if (snapshot.hasData) {
+          final product = snapshot.data!.data();
+          final productId = snapshot.data!.reference.id;
+          return ListView(
             children: [
-              ProductDescription(
-                product: widget.product,
-                pressOnSeeMore: () {},
-              ),
+              ProductImages(product: product!),
               TopRoundedContainer(
-                color: const Color(0xFFF6F7F9),
+                color: Colors.white,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        // left: width * 0.04,
-                        top: height * 0.01,
-                      ),
-                      child: ColorDots(product: widget.product),
+                    ProductDescription(
+                      product: product,
+                      pressOnSeeMore: () {},
                     ),
-                    Gap(height * 0.02),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: width * 0.05,
-                          right: width * 0.05,
-                          bottom: height * 0.02
-                          // : height * 0.04,
-                          ),
-                      child: isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.deepOrange,
-                            )
-                          : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 6,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    8,
-                                  ),
-                                ),
-                                backgroundColor: widget.product['is-in-basket']
-                                    ? Color.fromARGB(255, 6, 15, 140)
-                                    : const Color(0xFFFF7643),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: width * 0.35,
-                                  vertical: height * 0.018,
-                                ),
-                              ),
-                              onPressed: isInBasket ? () {} : addToCart,
-                              child: widget.product['is-in-basket']
-                                  ? const Text(
-                                      'Is in Basket',
-                                      style: TextStyle(
-                                        letterSpacing: 0.4,
-                                      ),
-                                    )
-                                  : const Text(
-                                      'Add to Cart',
-                                      style: TextStyle(
-                                          // letterSpacing: 0.4,
-                                          ),
-                                    ),
+                    TopRoundedContainer(
+                      color: const Color(0xFFF6F7F9),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              // left: width * 0.04,
+                              top: height * 0.01,
                             ),
+                            child: ColorDots(product: product),
+                          ),
+                          Gap(height * 0.02),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: width * 0.05,
+                                right: width * 0.05,
+                                bottom: height * 0.01
+                                // : height * 0.04,
+                                ),
+                            child: isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.deepOrange,
+                                  )
+                                : SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 6,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        backgroundColor: product['is-in-basket']
+                                            ? const Color.fromARGB(
+                                                255, 6, 15, 140)
+                                            : const Color(0xFFFF7643),
+                                        padding: EdgeInsets.symmetric(
+                                          // horizontal: width * 0.35,
+                                          vertical: height * 0.02,
+                                        ),
+                                      ),
+                                      onPressed: isInBasket
+                                          ? () {}
+                                          : () {
+                                              addToCart(product);
+                                            },
+                                      child: product['is-in-basket']
+                                          ? const Text(
+                                              'Is in Basket',
+                                              style: TextStyle(
+                                                letterSpacing: 0.4,
+                                              ),
+                                            )
+                                          : const Text(
+                                              'Add to Cart',
+                                              style: TextStyle(
+                                                letterSpacing: 0.4,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ],
-          ),
-        ),
-      ],
+          );
+        }
+        return const CircularProgressIndicator();
+      },
+      stream: FirebaseFirestore.instance
+          .collection('products')
+          .doc(widget.productId)
+          .snapshots(),
     );
   }
 }

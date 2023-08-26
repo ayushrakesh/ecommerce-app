@@ -25,7 +25,7 @@ class PopularProducts extends StatelessWidget {
         ),
         Gap(height * 0.03),
         SizedBox(
-          height: height * 0.4,
+          height: height * 0.32,
           width: double.infinity,
           child: StreamBuilder(
             builder: (context, snapshot) {
@@ -34,8 +34,10 @@ class PopularProducts extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     print(snapshot.data!.docs);
+                    final productId = snapshot.data!.docs[index].reference.id;
+
                     return ProductCard(
-                      product: snapshot.data!.docs[index].data(),
+                      productId: productId,
                       id: snapshot.data!.docs[index].data()['id'],
                       isFavourite:
                           snapshot.data!.docs[index].data()['isFavourite'],

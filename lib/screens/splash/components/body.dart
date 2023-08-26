@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/screens/home/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // This is the best practice
@@ -66,14 +68,19 @@ class _SplashBodyState extends State<SplashBody> {
                         (index) => buildDot(index: index),
                       ),
                     ),
-                    Spacer(flex: 3),
+                    const Spacer(flex: 3),
                     DefaultButton(
                       text: "Continue",
                       press: () {
-                        Navigator.pushNamed(context, SignInScreen.routeName);
+                        if (FirebaseAuth.instance.currentUser == null) {
+                          // print(FirebaseAuth.instance.currentUser!.uid);
+                          Navigator.pushNamed(context, SignInScreen.routeName);
+                        }
+                        print(FirebaseAuth.instance.currentUser!.uid);
+                        Navigator.of(context).pushNamed(HomeScreen.routeName);
                       },
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),

@@ -33,33 +33,32 @@ class _SignFormState extends State<SignForm> {
   void authenticate() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      FocusScope.of(context).unfocus();
-
-      KeyboardUtil.hideKeyboard(context);
-
-      emailController.clear();
-      passwordController.clear();
-
-      setState(() {
-        isLoading = true;
-      });
-
-      try {
-        final credential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email!, password: password!);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
-        }
-      }
-
-      setState(() {
-        isLoading = true;
-      });
     }
+    FocusScope.of(context).unfocus();
+
+    KeyboardUtil.hideKeyboard(context);
+
+    // emailController.clear();
+    // passwordController.clear();
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email!, password: password!);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override

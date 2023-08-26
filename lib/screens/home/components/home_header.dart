@@ -1,8 +1,10 @@
+import 'package:ecommerce_app/screens/orders_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
+import '../../../widgets/rounded_icon_btn_orders.dart';
 import '../../cart/cart_screen.dart';
 import 'icon_btn_with_counter.dart';
 
@@ -43,14 +45,15 @@ class _HomeHeaderState extends State<HomeHeader> {
             ),
           ),
         ),
-        IconBtnWithCounter(
+        IconBtnWithCounterCart(
           svgSrc: "assets/icons/Cart Icon.svg",
           press: () => Navigator.pushNamed(context, CartScreen.routeName),
         ),
-        IconBtnWithCounter(
-          svgSrc: "assets/icons/Bell.svg",
-          numOfitem: 3,
-          press: () {},
+        IconBtnWithCounterOrders(
+          svgSrc: "assets/icons/order.svg",
+          press: () {
+            Navigator.of(context).pushNamed(OrdersScreen.routename);
+          },
         ),
       ],
     );

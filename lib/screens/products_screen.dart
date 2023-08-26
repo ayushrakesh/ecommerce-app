@@ -1,13 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/components/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
-class ProductsScreen extends StatelessWidget {
+class ProductsScreen extends StatefulWidget {
   static const String routeName = '/products';
 
+  @override
+  State<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends State<ProductsScreen> {
   final height = Get.height;
+
   final width = Get.width;
+
+  // bool _enabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +48,19 @@ class ProductsScreen extends StatelessWidget {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   if (snapshot.hasData) {
+                    final productId = snapshot.data!.docs[index].reference.id;
+
                     return ProductCard(
-                      product: snapshot.data!.docs[index].data(),
+                      productId: productId,
+                      // product: snapshot.data!.docs[index].data(),
                       isAll: true,
                       id: snapshot.data!.docs[index].data()['id'],
                       isFavourite:
                           snapshot.data!.docs[index].data()['isFavourite'],
                     );
                   }
-                  return const CircularProgressIndicator();
+
+                  return CircularProgressIndicator();
                 },
               );
             },

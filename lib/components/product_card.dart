@@ -14,7 +14,8 @@ class ProductCard extends StatefulWidget {
     Key? key,
     this.width = 140,
     this.isProductsScreen = true,
-    required this.product,
+    required this.productId,
+    // required this.product,
     required this.isFavourite,
     required this.id,
     this.isAll = false,
@@ -23,9 +24,10 @@ class ProductCard extends StatefulWidget {
 
   final double width, aspectRetio;
 
+  final String productId;
   bool isProductsScreen;
 
-  Map<String, dynamic> product;
+  // Map<String, dynamic> product;
   bool isFavourite;
   String id;
   bool isAll;
@@ -59,89 +61,109 @@ class _ProductCardState extends State<ProductCard> {
           ? EdgeInsets.all(0)
           : EdgeInsets.only(right: widget.width * 0.12),
       width: widths * 0.36,
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(
-          context,
-          DetailsScreen.routeName,
-          arguments: [
-            widget.product,
-            widget.product['id'],
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 1.02,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: widget.width * 0.02,
-                  vertical: height * 0.04,
-                ),
-                decoration: BoxDecoration(
-                  color: kSecondaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Hero(
-                  tag: widget.product['id'],
-                  child: Image.network('${widget.product['images'][0]}'),
-                ),
+      child: StreamBuilder(
+        builder: (ctx, snapshot) {
+          if (snapshot.hasData) {
+            return GestureDetector(
+              onTap: () => Navigator.pushNamed(
+                context,
+                DetailsScreen.routeName,
+                arguments: [
+                  widget.productId,
+                  // widget.product['id'],
+                ],
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              widget.product['name'],
-              style: TextStyle(color: Colors.black),
-              maxLines: 2,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "\$${widget.product['price']}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: kPrimaryColor,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1.02,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: widget.width * 0.02,
+                        vertical: height * 0.04,
+                      ),
+                      decoration: BoxDecoration(
+                        color: kSecondaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Hero(
+                        tag: widget.productId,
+                        child: Image.network(snapshot.data!.get('images')[0]),
+                      ),
+                    ),
                   ),
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap:
-                      widget.isProductsScreen ? updateFavouriteStatus : () {},
-                  child: widget.isProductsScreen
-                      ? Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: widget.product['isFavourite']
-                                ? kPrimaryColor.withOpacity(0.15)
-                                : kSecondaryColor.withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/icons/Heart Icon_2.svg",
-                            height: widget.width * 0.08,
-                            color: widget.product['isFavourite']
-                                ? Color(0xFFFF4848)
-                                : Color(0xFFDBDEE4),
-                          ),
-                        )
-                      : Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: kPrimaryColor.withOpacity(0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: SvgPicture.asset(
-                              "assets/icons/Heart Icon_2.svg",
-                              height: widget.width * 0.08,
-                              color: Color(0xFFFF4848)),
+                  SizedBox(height: 10),
+                  Text(
+                    snapshot.data!.get('name'),
+                    style: TextStyle(color: Colors.black),
+                    maxLines: 2,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        snapshot.data!.get('price').toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: kPrimaryColor,
                         ),
-                ),
-              ],
-            )
-          ],
-        ),
+                      ),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(50),
+                        onTap: widget.isProductsScreen
+                            ? () async {
+                                final isfav = snapshot.data!.get('isFavourite');
+                                await FirebaseFirestore.instance
+                                    .collection('products')
+                                    .doc(widget.productId)
+                                    .update({
+                                  'isFavourite': isfav ? false : true,
+                                });
+                              }
+                            : () {},
+                        child: widget.isProductsScreen
+                            ? Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: snapshot.data!.get('isFavourite')
+                                      ? kPrimaryColor.withOpacity(0.15)
+                                      : kSecondaryColor.withOpacity(0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/icons/Heart Icon_2.svg",
+                                  height: widget.width * 0.08,
+                                  color: snapshot.data!.get('isFavourite')
+                                      ? Color(0xFFFF4848)
+                                      : Color(0xFFDBDEE4),
+                                ),
+                              )
+                            : Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: kPrimaryColor.withOpacity(0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset(
+                                    "assets/icons/Heart Icon_2.svg",
+                                    height: widget.width * 0.08,
+                                    color: Color(0xFFFF4848)),
+                              ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          }
+          return CircularProgressIndicator();
+        },
+        stream: FirebaseFirestore.instance
+            .collection('products')
+            .doc(widget.productId)
+            .snapshots(),
       ),
     );
   }

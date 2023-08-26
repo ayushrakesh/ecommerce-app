@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import '../../profile/components/profile_pic.dart';
@@ -13,7 +12,7 @@ class Body extends StatelessWidget {
   final height = Get.height;
   final width = Get.width;
 
-  File? pickedimg;
+  final File pickedimg = File('assets/images/Profile Image.png');
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +25,8 @@ class Body extends StatelessWidget {
             child: Column(
               children: [
                 Gap(height * 0.03),
-                ProfilePic(pickedimg),
-                Gap(height * 0.026),
-                CompleteProfileForm(pickedimg),
+                // Gap(height * 0.026),
+                CompleteProfileForm(),
                 Gap(height * 0.03),
                 Text(
                   "By continuing your confirm that you agree \nwith our Term and Condition",

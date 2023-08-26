@@ -20,7 +20,7 @@ class CustomBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color inActiveIconColor = Color(0xFFB6B6B6);
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 14),
+      padding: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -30,55 +30,56 @@ class CustomBottomNavBar extends StatelessWidget {
             color: Color(0xFFDADADA).withOpacity(0.15),
           ),
         ],
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),
           topRight: Radius.circular(40),
         ),
       ),
       child: SafeArea(
-          top: false,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: SvgPicture.asset(
-                  "assets/icons/Shop Icon.svg",
-                  color: MenuState.home == selectedMenu
-                      ? kPrimaryColor
-                      : inActiveIconColor,
-                ),
-                onPressed: () =>
-                    Navigator.pushNamed(context, HomeScreen.routeName),
+        top: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/Shop Icon.svg",
+                color: MenuState.home == selectedMenu
+                    ? kPrimaryColor
+                    : inActiveIconColor,
               ),
-              IconButton(
-                icon: SvgPicture.asset(
-                  "assets/icons/Heart Icon.svg",
-                  color: MenuState.favourite == selectedMenu
-                      ? kPrimaryColor
-                      : inActiveIconColor,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, FavouriteScreen.routeName);
-                },
+              onPressed: () =>
+                  Navigator.pushNamed(context, HomeScreen.routeName),
+            ),
+            IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/Heart Icon.svg",
+                color: MenuState.favourite == selectedMenu
+                    ? kPrimaryColor
+                    : inActiveIconColor,
               ),
-              IconButton(
-                icon: SvgPicture.asset("assets/icons/Cart Icon.svg"),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.routeName);
-                },
+              onPressed: () {
+                Navigator.pushNamed(context, FavouriteScreen.routeName);
+              },
+            ),
+            IconButton(
+              icon: SvgPicture.asset("assets/icons/Cart Icon.svg"),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+            IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/User Icon.svg",
+                color: MenuState.profile == selectedMenu
+                    ? kPrimaryColor
+                    : inActiveIconColor,
               ),
-              IconButton(
-                icon: SvgPicture.asset(
-                  "assets/icons/User Icon.svg",
-                  color: MenuState.profile == selectedMenu
-                      ? kPrimaryColor
-                      : inActiveIconColor,
-                ),
-                onPressed: () =>
-                    Navigator.pushNamed(context, ProfileScreen.routeName),
-              ),
-            ],
-          )),
+              onPressed: () =>
+                  Navigator.pushNamed(context, ProfileScreen.routeName),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -5,16 +6,16 @@ import 'package:get/get.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
-class IconBtnWithCounter extends StatelessWidget {
-  IconBtnWithCounter({
+class IconBtnWithCounterCart extends StatelessWidget {
+  IconBtnWithCounterCart({
     Key? key,
     required this.svgSrc,
-    this.numOfitem = 0,
+    // this.numOfitem = 0,
     required this.press,
   }) : super(key: key);
 
   final String svgSrc;
-  final int numOfitem;
+  // final int numOfitem;
   final GestureTapCallback press;
 
   final height = Get.height;
@@ -40,8 +41,8 @@ class IconBtnWithCounter extends StatelessWidget {
             ),
             child: SvgPicture.asset(svgSrc),
           ),
-          if (numOfitem != 0)
-            Positioned(
+          // if (numOfitem != 0)
+          Positioned(
               top: -3,
               right: 0,
               child: Container(
@@ -53,17 +54,30 @@ class IconBtnWithCounter extends StatelessWidget {
                   border: Border.all(width: 1.5, color: Colors.white),
                 ),
                 child: Center(
-                  child: Text(
-                    "$numOfitem",
-                    style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: StreamBuilder(
+                      builder: (ctx, snapshot) {
+                        num items = 0;
+
+                        if (snapshot.hasData) {
+                          for (var prod in snapshot.data!.docs) {
+                            items = items + prod['quantity'];
+                          }
+                          return Text(
+                            items.toString(),
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          );
+                        }
+                        return const CircularProgressIndicator();
+                      },
+                      stream: FirebaseFirestore.instance
+                          .collection('cart')
+                          .snapshots()),
                 ),
-              ),
-            )
+              )),
         ],
       ),
     );

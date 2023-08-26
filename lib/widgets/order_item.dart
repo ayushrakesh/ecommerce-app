@@ -24,7 +24,8 @@ class _OrderItemState extends State<OrderItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shadowColor: Color.fromARGB(255, 196, 195, 195),
+      margin: EdgeInsets.only(bottom: height * 0.03),
+      shadowColor: const Color.fromARGB(255, 196, 195, 195),
       elevation: 7,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),

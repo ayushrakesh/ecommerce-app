@@ -55,6 +55,8 @@ class CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
+              height: width / 6,
+              width: width / 6,
               padding: EdgeInsets.all(height * 0.026),
               decoration: BoxDecoration(
                 color: Color(0xFFFFECDF),

@@ -14,12 +14,12 @@ class CompleteProfileScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             size: 18,
           ),
         ),
-        title: Text(
+        title: const Text(
           'Update your profile',
           style: TextStyle(
             fontSize: 24,

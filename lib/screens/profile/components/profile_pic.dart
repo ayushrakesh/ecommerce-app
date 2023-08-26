@@ -25,8 +25,7 @@ class _ProfilePicState extends State<ProfilePic> {
           CircleAvatar(
             backgroundImage: widget.image != null
                 ? FileImage(widget.image!)
-                : const AssetImage("assets/images/Profile Image.png")
-                    as ImageProvider,
+                : const AssetImage('assets/images/user.png') as ImageProvider,
           ),
           Positioned(
             right: -16,

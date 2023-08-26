@@ -32,7 +32,7 @@ class SpecialOffers extends StatelessWidget {
                 numOfBrands: 18,
                 press: () {},
               ),
-              Gap(height * 0.03),
+              Gap(height * 0.02),
               SpecialOfferCard(
                 image: "assets/images/Image Banner 3.png",
                 category: "Fashion",
@@ -69,13 +69,15 @@ class SpecialOfferCard extends StatelessWidget {
       onTap: press,
       child: Container(
         width: width * 0.7,
-        height: height * 0.18,
+        height: height * 0.16,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Stack(
             children: [
               Image.asset(
                 image,
+                height: height * 0.16,
+                // opacity,
                 fit: BoxFit.cover,
               ),
               Container(
@@ -97,11 +99,11 @@ class SpecialOfferCard extends StatelessWidget {
                 ),
                 child: Text.rich(
                   TextSpan(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     children: [
                       TextSpan(
                         text: "$category\n",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),

@@ -36,14 +36,18 @@ class FavouriteScreen extends StatelessWidget {
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
+                  mainAxisSpacing: width * 0.02,
                   childAspectRatio: 0.68,
                   crossAxisSpacing: width * 0.03,
                 ),
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
+                  final productId = snapshot.data!.docs[index].reference.id;
+
                   if (snapshot.hasData) {
                     return ProductCard(
-                      product: snapshot.data!.docs[index].data(),
+                      productId: productId,
+                      // product: snapshot.data!.docs[index].data(),
                       isAll: true,
                       id: snapshot.data!.docs[index].data()['id'],
                       isFavourite:
@@ -63,7 +67,7 @@ class FavouriteScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar:
-          CustomBottomNavBar(selectedMenu: MenuState.favourite),
+          const CustomBottomNavBar(selectedMenu: MenuState.favourite),
     );
   }
 }
