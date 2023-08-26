@@ -24,7 +24,7 @@ class _ProfilePicState extends State<ProfilePic> {
         children: [
           CircleAvatar(
             backgroundImage: widget.image != null
-                ? FileImage(widget.image!)
+                ? FileImage(File(widget.image!.path))
                 : const AssetImage('assets/images/user.png') as ImageProvider,
           ),
           Positioned(
@@ -43,8 +43,10 @@ class _ProfilePicState extends State<ProfilePic> {
                   backgroundColor: Color(0xFFF5F6F9),
                 ),
                 onPressed: () async {
-                  var img = await ImagePicker()
-                      .pickImage(source: ImageSource.camera, imageQuality: 50);
+                  var img = await ImagePicker().pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 50,
+                  );
 
                   setState(() {
                     widget.image = File(img!.path);

@@ -44,6 +44,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   crossAxisCount: 2,
                   childAspectRatio: 0.68,
                   crossAxisSpacing: width * 0.03,
+                  mainAxisSpacing: width * 0.02,
                 ),
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {

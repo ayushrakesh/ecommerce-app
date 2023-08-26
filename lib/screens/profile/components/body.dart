@@ -43,10 +43,9 @@ class _BodyState extends State<Body> {
           actions: [
             const Spacer(flex: 1),
             TextButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).popAndPushNamed(SplashScreen.routeName);
-                // .pushReplacementNamed(SignInScreen.routeName);
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                FirebaseAuth.instance.signOut();
               },
               child: const Text('Yes'),
             ),
@@ -95,27 +94,24 @@ class _BodyState extends State<Body> {
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
-          Container(
-              height: height * 0.2,
-              width: height * 0.2,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: StreamBuilder(
-                builder: (ctx, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.data()!['image'] != null) {
-                      return Image.network(snapshot.data!.data()!['image']);
-                    }
-                    return Image.asset('assets/images/user.png');
-                  }
-                  return const CircularProgressIndicator();
-                },
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(userId)
-                    .snapshots(),
-              )),
+          StreamBuilder(
+            builder: (ctx, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.data()!['image'] != null) {
+                  return CircleAvatar(
+                      radius: height * 0.09,
+                      backgroundImage:
+                          NetworkImage(snapshot.data!.data()!['image']));
+                }
+                return Image.asset('assets/images/user.png');
+              }
+              return const CircularProgressIndicator();
+            },
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .snapshots(),
+          ),
           SizedBox(height: 20),
           ProfileMenu(
             text: "My Account",

@@ -72,12 +72,12 @@ class _SplashBodyState extends State<SplashBody> {
                     DefaultButton(
                       text: "Continue",
                       press: () {
-                        if (FirebaseAuth.instance.currentUser == null) {
-                          // print(FirebaseAuth.instance.currentUser!.uid);
-                          Navigator.pushNamed(context, SignInScreen.routeName);
-                        }
-                        print(FirebaseAuth.instance.currentUser!.uid);
-                        Navigator.of(context).pushNamed(HomeScreen.routeName);
+                        // if (FirebaseAuth.instance.currentUser == null) {
+                        //   // print(FirebaseAuth.instance.currentUser!.uid);
+                        //   Navigator.pushNamed(context, SignInScreen.routeName);
+                        // }
+                        // print(FirebaseAuth.instance.currentUser!.uid);
+                        // Navigator.of(context).pushNamed(HomeScreen.routeName);
                       },
                     ),
                     const Spacer(),

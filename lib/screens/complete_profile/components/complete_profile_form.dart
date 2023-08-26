@@ -8,8 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../components/custom_surfix_icon.dart';
@@ -48,7 +50,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   File? imgFile;
 
-  @override
+  // @override
   // void initState() {
   //   getuserdata();
   //   super.initState();
@@ -72,8 +74,13 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     void saveDetails() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
+
         KeyboardUtil.hideKeyboard(context);
         FocusScope.of(context).unfocus();
+
+        print(firstName);
+        print(lastName);
+        print(phoneNumber);
 
         firstNameCtl.clear();
         lastnameCtl.clear();
@@ -83,14 +90,24 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           isloading = true;
         });
 
-        final imageRef = FirebaseStorage.instance
-            .ref()
-            .child('user-images')
-            .child('$currentUserid.jpg');
+        if (imgFile != null) {
+          final storage = FirebaseStorage.instance.ref();
+          final userImgesFolder = storage.child('user-images');
+          final userImageRF = userImgesFolder.child('$currentUserid.jpg');
 
-        final testimg = imageRef.putFile(imgFile!);
+          await userImageRF.putFile(imgFile!);
 
-        final userimagedownloadurl = await imageRef.getDownloadURL();
+          final userimagedownloadurl = await userImageRF.getDownloadURL();
+
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUserid)
+              .update(
+            {
+              'image': userimagedownloadurl,
+            },
+          );
+        }
 
         await FirebaseFirestore.instance
             .collection('users')
@@ -99,19 +116,14 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           'first-name': firstName!.trim(),
           'last-name': lastName!.trim(),
           'phone': phoneNumber!.trim(),
-          'image': userimagedownloadurl,
         });
-
-        // Directory appDocDir = await getApplicationDocumentsDirectory();
-        // String filePath = '${appDocDir.absolute}/$imagesRef';
-        // File file = File(filePath);
 
         setState(() {
           isloading = false;
         });
 
         if (isloading == false) {
-          Navigator.pushNamed(context, ProfileScreen.routeName);
+          Navigator.of(context).pop();
         }
       }
     }
@@ -120,7 +132,62 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
       key: _formKey,
       child: Column(
         children: [
-          ProfilePic(imgFile),
+          SizedBox(
+            height: 115,
+            width: 115,
+            child: Stack(
+              fit: StackFit.expand,
+              clipBehavior: Clip.none,
+              children: [
+                CircleAvatar(
+                  backgroundImage: imgFile != null
+                      ? FileImage(imgFile!) as ImageProvider
+                      : const AssetImage('assets/images/user.png')
+                          as ImageProvider,
+                ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     shape: BoxShape.circle,
+                //     image: DecorationImage(
+                //       image: imgFile != null
+                //           ? FileImage(imgFile!)
+                //           : const AssetImage('assets/images/user.png')
+                //               as ImageProvider,
+                //     ),
+                //   ),
+                // ),
+                Positioned(
+                  right: -16,
+                  bottom: 0,
+                  child: SizedBox(
+                    height: 46,
+                    width: 46,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          side: BorderSide(color: Colors.white),
+                        ),
+                        primary: Colors.white,
+                        backgroundColor: Color(0xFFF5F6F9),
+                      ),
+                      onPressed: () async {
+                        var img = await ImagePicker().pickImage(
+                          source: ImageSource.camera,
+                          imageQuality: 50,
+                        );
+
+                        setState(() {
+                          imgFile = File(img!.path);
+                        });
+                      },
+                      child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
           Gap(height * 0.03),
           buildFirstNameFormField(),
           Gap(height * 0.03),
