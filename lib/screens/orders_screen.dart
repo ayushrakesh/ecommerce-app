@@ -41,6 +41,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                reverse: true,
                 itemBuilder: (ctx, index) {
                   final data = snapshot.data!.docs[index];
                   final date = DateFormat('dd-MM-yyyy')
@@ -53,7 +54,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
             }
             return const CircularProgressIndicator();
           },
-          stream: FirebaseFirestore.instance.collection('orders').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('orders')
+              .orderBy('created-at')
+              .snapshots(),
         ),
       ),
     );

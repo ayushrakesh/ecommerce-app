@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/constants.dart';
+import 'package:ecommerce_app/screens/orders_screen.dart';
 import 'package:ecommerce_app/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -71,6 +72,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
         'is-in-basket': false,
       });
     }
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Order created successfully'),
+        action: SnackBarAction(
+          label: 'See details',
+          onPressed: () {
+            Navigator.of(context).pushNamed(OrdersScreen.routename);
+          },
+        ),
+      ),
+    );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {}

@@ -38,8 +38,8 @@ class _SignFormState extends State<SignForm> {
 
     KeyboardUtil.hideKeyboard(context);
 
-    // emailController.clear();
-    // passwordController.clear();
+    emailController.clear();
+    passwordController.clear();
 
     setState(() {
       isLoading = true;
